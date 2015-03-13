@@ -32,6 +32,4 @@ public:
 }
 
 
-Q_DECLARE_INTERFACE(plugin::interfaces::INumberGenerator, "INumberGenerator")
-
 #endif // INUMBERGENERATOR

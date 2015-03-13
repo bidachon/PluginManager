@@ -8,10 +8,10 @@
 #include <universeanswergeneratorimpl.h>
 #include <QSharedPointer>
 
-class NUMBERGENERATORSHARED_EXPORT NumberGeneratorPlugin : public QObject,  public plugin::StdPluginLib
+class NUMBERGENERATORSHARED_EXPORT NumberGeneratorPlugin :  public QObject, public plugin::StdPluginLib
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "IPluginLib")
+    Q_PLUGIN_METADATA(IID "NumberGeneratorPlugin")
     Q_INTERFACES(plugin::interfaces::IPluginLib)
 public:
     NumberGeneratorPlugin();

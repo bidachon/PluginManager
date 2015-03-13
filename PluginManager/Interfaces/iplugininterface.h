@@ -10,6 +10,7 @@ namespace interfaces {
 
 class IPluginInterface
 {
+
 public:
     virtual ~IPluginInterface() {}
 
@@ -22,7 +23,6 @@ public:
 }
 }
 
-Q_DECLARE_INTERFACE(plugin::interfaces::IPluginInterface, "IPluginInterface")
 
 
 

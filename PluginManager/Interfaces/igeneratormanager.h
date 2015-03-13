@@ -28,7 +28,6 @@ public:
 }
 }
 
-Q_DECLARE_INTERFACE(plugin::interfaces::IGeneratorManager, "IGeneratorManager")
 
 #endif // GENERATORMANAGER
 

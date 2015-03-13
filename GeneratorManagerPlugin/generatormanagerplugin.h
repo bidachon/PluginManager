@@ -7,7 +7,7 @@
 class GENERATORMANAGERPLUGINSHARED_EXPORT GeneratorManagerPlugin: public QObject, public plugin::StdPluginLib
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "IPluginLib")
+    Q_PLUGIN_METADATA(IID "GeneratorManagerPlugin")
     Q_INTERFACES(plugin::interfaces::IPluginLib)
 public:
     GeneratorManagerPlugin();
