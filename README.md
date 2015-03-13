@@ -1,2 +1,3 @@
 # PluginManager
-Plugin manager using Qt framework to create Qt application based o custom loadable plugins
+Plugin manager library using Qt framework to create Qt applications based on custom loadable plugins.
+ 
