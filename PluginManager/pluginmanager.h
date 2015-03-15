@@ -6,7 +6,7 @@
 #include <QMap>
 #include <QVector>
 #include <QSharedPointer>
-#include "interfaces/iplugininterface.h"
+#include "Interfaces/iplugininterface.h"
 #include "Interfaces/ipluginlib.h"
 
 namespace plugin {

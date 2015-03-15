@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "InterfaceId.h"
+#include "interfaceid.h"
 
 namespace plugin {
 
