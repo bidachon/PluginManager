@@ -19,7 +19,7 @@ SOURCES += \
 HEADERS += \
     universeanswergeneratorimpl.h \
     universeanswergeneratorplugin.h \
-    universeAnswergenerator_global.h
+    universeanswergenerator_global.h
 
 
 INCLUDEPATH += $$PWD/../PluginManager/
