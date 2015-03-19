@@ -1,7 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    ExampleApp \
-    UniverseAnswerGeneratorPlugin \
+    Apps \
     PluginManager \
-    GeneratorManagerPlugin
+    Plugins
