@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     plugin::PluginManager pm;
-    bool succeed = pm.load("/home/nicolasrobert/Programming/GitHub/PluginManager/Apps/ExampleApp/pluginlist.json");
+    bool succeed = pm.load("pluginlist.json");
     if (!succeed)
     {
         qDebug() << pm.errorMessage();

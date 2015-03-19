@@ -1,2 +1,2 @@
-#add_subdirectory(GeneratorManagerPlugin)
+add_subdirectory(GeneratorManagerPlugin)
 add_subdirectory(UniverseAnswerGeneratorPlugin)

@@ -1,12 +1,18 @@
-add_library( UniverseAnswerGeneratorPlugin SHARED universeanswergeneratorimpl.cpp 
-			universeanswergeneratorplugin.cpp 
+
+add_library( UniverseAnswerGeneratorPlugin SHARED
+			universeanswergeneratorplugin.cpp
+			universeanswergeneratorimpl.cpp
 			)
 
 
 target_include_directories (UniverseAnswerGeneratorPlugin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 include_directories ("${PROJECT_SOURCE_DIR}/PluginManager/Interfaces")
 
-#message("INCLUDE_DIRECTORIES" ${PROJECT_SOURCE_DIR}/PluginManager/Interfaces/inumbergenerator.h)
+set_target_properties( UniverseAnswerGeneratorPlugin
+    PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins"
+)
 
 # Use the Xml module from Qt 5.
-target_link_libraries(UniverseAnswerGeneratorPlugin Qt5::Core)
+target_link_libraries(UniverseAnswerGeneratorPlugin Qt5::Core PluginManager)
