@@ -22,9 +22,9 @@ HEADERS += \
     universeanswergenerator_global.h
 
 
-INCLUDEPATH += $$PWD/../PluginManager/
+INCLUDEPATH += $$ROOTSRCDIR/PluginManager/
 
-DESTDIR  = ../plugins
+DESTDIR  = $$ROOTBUILDDIR/plugins
 
 unix {
     target.path = /usr/lib

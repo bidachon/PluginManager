@@ -24,13 +24,12 @@ DISTFILES += \
     pluginlist.json
 
 
-INCLUDEPATH += $$PWD/../PluginManager
+INCLUDEPATH += $$ROOTSRCDIR/PluginManager
 
 
-unix|win32: LIBS += -L$$OUT_PWD/../PluginManager/ -lPluginManager
+unix|win32: LIBS += -L$$ROOTBUILDDIR/PluginManager/ -lPluginManager
 
-INCLUDEPATH += $$PWD/../PluginManager
-DEPENDPATH += $$PWD/../PluginManager
+DEPENDPATH += $$ROOTSRCDIR/PluginManager
 
-win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../PluginManager/PluginManager.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../PluginManager/libPluginManager.a
+win32:!win32-g++: PRE_TARGETDEPS += $$ROOTBUILDDIR/PluginManager/PluginManager.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$ROOTBUILDDIR/PluginManager/libPluginManager.a
