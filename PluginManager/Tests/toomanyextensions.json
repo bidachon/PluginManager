@@ -1,0 +1,9 @@
+{
+   "configuration": {
+      "description": "Demo application",
+      "author":"Nicolas Robert"
+   },
+   "plugins":["./plugins/libDummyGeneratorPlugin.so",
+      "./plugins/libUniverseAnswerGeneratorPlugin.so",
+      "./plugins/libDummy2GeneratorPlugin.so"]
+}

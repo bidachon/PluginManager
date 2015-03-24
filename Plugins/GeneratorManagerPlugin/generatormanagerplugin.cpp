@@ -13,7 +13,7 @@ static QSharedPointer<GeneratorManagerImpl> generatorManager()
 GeneratorManagerPlugin::GeneratorManagerPlugin()
 {
     m_extensions.push_back(new plugin::Extension(generatorManager()));
-    m_dependencies.push_back(new plugin::Dependency(0,plugin::DEPENDENCY_UNLIMITED,plugin::InterfaceId("INumberGenerator")));
+    m_dependencies.push_back(new plugin::Dependency(0,2,plugin::InterfaceId("INumberGenerator")));
 }
 
 GeneratorManagerPlugin::~GeneratorManagerPlugin()

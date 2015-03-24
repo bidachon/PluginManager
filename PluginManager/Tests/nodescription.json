@@ -1,0 +1,8 @@
+{
+   "configuration": {
+      "descrXption": "Demo application",
+      "author":"Nicolas Robert"
+   },
+   "plugins":["../../plugins/libUniverseAnswerGeneratorPlugin",
+              "../../plugins/libGeneratorManagerPlugin"]
+}

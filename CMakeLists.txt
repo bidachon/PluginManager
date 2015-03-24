@@ -27,3 +27,21 @@ add_subdirectory(Apps)
 add_subdirectory(Plugins)
 
 #message( "PROJECT_SOURCE_DIR:" ${PROJECT_SOURCE_DIR} )
+
+#define a macro to simplify adding tests, then use it
+macro (do_simpletest name arg result)
+  add_test (${name} ${PROJECT_BINARY_DIR}/PluginManager/Tests/PluginManagerTest ${arg})
+  set_tests_properties (${name}
+    PROPERTIES PASS_REGULAR_EXPRESSION ${result})
+endmacro (do_simpletest)
+
+enable_testing()
+
+do_simpletest(FileDoesNotExist ${PROJECT_BINARY_DIR}/PluginManager/Tests/XXX.json "File does not exist")
+do_simpletest(NoConfigurationTag ${PROJECT_BINARY_DIR}/PluginManager/Tests/noconfiguration.json "Missing json object attribute /configuration/")
+do_simpletest(NoDescriptionTag ${PROJECT_BINARY_DIR}/PluginManager/Tests/nodescription.json "Missing or empty json string attribute /description/")
+do_simpletest(NoAuthorTag ${PROJECT_BINARY_DIR}/PluginManager/Tests/noauthor.json "Missing or empty json string attribute /author/")
+do_simpletest(NoPlugins ${PROJECT_BINARY_DIR}/PluginManager/Tests/noplugins.json "Missing or empty json array attribute /plugins/")
+do_simpletest(InvalidPluginFile ${PROJECT_BINARY_DIR}/PluginManager/Tests/invalidpluginfile.json "The shared library was not found")
+do_simpletest(NotEnoughExtensions ${PROJECT_BINARY_DIR}/PluginManager/Tests/notenoughextensions.json "This plugin configuration could not provide enough extensions of type -INumberGenerator-")
+do_simpletest(TooManyExtensions ${PROJECT_BINARY_DIR}/PluginManager/Tests/toomanyextensions.json "This plugin configuration provided too many extensions of type -INumberGenerator-")

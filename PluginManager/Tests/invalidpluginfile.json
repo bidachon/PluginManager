@@ -1,0 +1,7 @@
+{
+   "configuration": {
+      "description": "Demo application",
+      "author":"Nicolas Robert"
+   },
+   "plugins":["../../plugins/libXX"]
+}

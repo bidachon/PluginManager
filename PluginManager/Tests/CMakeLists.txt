@@ -1,0 +1,11 @@
+add_executable(PluginManagerTest pluginManagerTest.cpp )
+target_include_directories (PluginManagerTest PUBLIC ${CMAKE_SOURCE_DIR}/PluginManager/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/noconfiguration.json ${CMAKE_CURRENT_BINARY_DIR}/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/nodescription.json ${CMAKE_CURRENT_BINARY_DIR}/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/noauthor.json ${CMAKE_CURRENT_BINARY_DIR}/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/noplugins.json ${CMAKE_CURRENT_BINARY_DIR}/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/invalidpluginfile.json ${CMAKE_CURRENT_BINARY_DIR}/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/notenoughextensions.json ${CMAKE_CURRENT_BINARY_DIR}/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/toomanyextensions.json ${CMAKE_CURRENT_BINARY_DIR}/)
+
+target_link_libraries(PluginManagerTest PluginManager)

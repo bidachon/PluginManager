@@ -22,7 +22,7 @@ bool PluginManager::load(const QString & filename)
     bool status = parser.parse(filename);
     if (!status)
     {
-        qDebug() << "Error parsing the json file:" << filename;
+        //qDebug() << "Error parsing the json file:" << filename;
         m_errorMsg = parser.errorMessage();
         return false;
     }
@@ -35,10 +35,10 @@ bool PluginManager::load(const QString & filename)
         pl.setFileName(p);
         pl.load();
         isValid = true;
-        qDebug() << "Processing plugin file " + p;
+        //qDebug() << "Processing plugin file " + p;
         if (!pl.isLoaded())
         {
-            qDebug() << "Error loading plugin";
+            //qDebug() << "Error loading plugin";
             m_errorMsg = p + " " + pl.errorString();
             isValid = false;
             return isValid;
@@ -52,12 +52,12 @@ bool PluginManager::load(const QString & filename)
             return isValid;
         }
         m_pluginLibs.append(ngplugin);
-        qDebug() << "Extracting Extensions";
+        //qDebug() << "Extracting Extensions";
         const std::list<Extension *> exts = ngplugin->extensions();
         for (std::list<Extension *>::const_iterator it = exts.begin(); it != exts.end(); it++ )
         {
             QString name = QString::fromStdString((*it)->interface()->id().name());
-            qDebug() << "\t" << name;
+            //qDebug() << "\t" << name;
             m_extensionMap[name].push_back((*it)->interface());
         }
     }
@@ -65,21 +65,21 @@ bool PluginManager::load(const QString & filename)
     foreach(plugin::interfaces::IPluginLib*pl, m_pluginLibs)
     {
 
-        qDebug() << "Extracting Dependencies";
+        //qDebug() << "Extracting Dependencies";
         const std::list<Dependency *> deps = pl->dependencies();
         for (std::list<Dependency *>::const_iterator it = deps.begin(); it != deps.end(); it++ )
         {
             QString name = QString::fromStdString((*it)->interfaceId().name());
-            qDebug() << "\t" << name;
+            //qDebug() << "\t" << name;
             if (m_extensionMap[name].size() < (*it)->minExt())
             {
-                m_errorMsg = "This plugin configuration could not provide enough extensions of type /" + name+"/ ";
+                m_errorMsg = "This plugin configuration could not provide enough extensions of type -" + name+"-";
                 isValid = false;
                 return isValid;
             }
             if (m_extensionMap[name].size() > (*it)->maxExt())
             {
-                m_errorMsg = "This plugin configuration provided too many extensions of type /" + name+"/ ";
+                m_errorMsg = "This plugin configuration provided too many extensions of type -" + name+"-";
                 isValid = false;
                 return isValid;
             }
