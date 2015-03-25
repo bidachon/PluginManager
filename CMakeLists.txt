@@ -24,7 +24,7 @@ set (PluginManager_VERSION_MINOR 0)
 
 add_subdirectory(PluginManager)
 add_subdirectory(Apps)
-add_subdirectory(Plugins)
+add_subdirectory(Examples)
 
 #message( "PROJECT_SOURCE_DIR:" ${PROJECT_SOURCE_DIR} )
 

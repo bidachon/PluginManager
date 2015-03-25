@@ -12,14 +12,23 @@
 #include <QSharedPointer>
 #include <QSharedData>
 #include <QSharedDataPointer>
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-
     plugin::PluginManager pm;
-    bool succeed = pm.load("pluginlist.json");
+
+    if (argc != 2)
+    {
+        std::cerr << "Invalid parameters" << std::endl;
+        std::cerr << "Please provide the path of the plugin .json file" << std::endl;
+        return 1;
+    }
+
+    bool succeed = pm.load(argv[1]);
+
     if (!succeed)
     {
         qDebug() << pm.errorMessage();
@@ -27,13 +36,13 @@ int main(int argc, char *argv[])
     }
     QList<QSharedPointer<plugin::interfaces::IPluginInterface> > genMngList = pm.getExtensions(plugin::InterfaceId("IGeneratorManager"));
 
-    //QSharedPointer<plugin::interfaces::IGeneratorManager> genMng = qobject_cast<plugin::interfaces::IGeneratorManager>(genMngList.at(0));
+    if (genMngList.isEmpty())
+        std::cerr << "Your plugin list does not provide an implementation of IGeneratorManager" << std::endl;
+
     QSharedPointer<plugin::interfaces::IPluginInterface> ptr = genMngList.at(0);
     QSharedPointer<plugin::interfaces::IGeneratorManager> genMgr = qSharedPointerCast<plugin::interfaces::IGeneratorManager>(ptr);
     genMgr->widget()->show();
-    //QPushButton btn("Helloworld");
-    //btn.show();
-    //w.show();
+
 
     return a.exec();
 }

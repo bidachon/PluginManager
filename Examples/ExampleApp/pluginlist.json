@@ -4,5 +4,6 @@
       "author":"Nicolas Robert"
    },
    "plugins":["../../plugins/libUniverseAnswerGeneratorPlugin",
-              "../../plugins/libGeneratorManagerPlugin"]
+              "../../plugins/libGeneratorManagerPlugin",
+              "../../plugins/libDummyGeneratorPlugin"]
 }
