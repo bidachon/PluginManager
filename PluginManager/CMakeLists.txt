@@ -23,13 +23,14 @@ set(${TARGET}_INC
 set(${TARGET}_LIB
   )
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 # RKTODO:  Provide ability to create static vs shared library
 add_library(${TARGET} STATIC
     ${${TARGET}_SRC}
     ${${TARGET}_HDR}
 )
+
+set_target_properties(${TARGET} PROPERTIES VERSION ${PluginManager_VERSION_MAJOR}.${PluginManager_VERSION_MINOR})
+set_target_properties(${TARGET} PROPERTIES SOVERSION ${PluginManager_VERSION_MAJOR})
+
+set(${TARGET}_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "" FORCE)
 
