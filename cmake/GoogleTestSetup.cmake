@@ -4,7 +4,8 @@ function(FetchGoogleTest)
     ## RKTODO:  Find the hash for the latest version of google test and update this
     FetchContent_Declare(
       googletest
-      URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+      GIT_REPOSITORY https://github.com/google/googletest.git
+      GIT_TAG 58d77fa8070e8cec2dc1ed015d66b454c8d78850 # release-v1.12.1
     )
 
     # For Windows: Prevent overriding the parent project's compiler/linker settings
@@ -15,6 +16,7 @@ endfunction()
 function(AddGoogleTestDependency TEST)
     target_link_libraries(${TEST}
         GTest::gtest_main
+        GTest::gmock_main
     )
 endfunction()
 
@@ -22,3 +24,4 @@ function(AutoDiscoverTargetTests TEST)
     include(GoogleTest)
     gtest_discover_tests(${TEST})
 endfunction()
+
