@@ -5,7 +5,8 @@
 #include <filesystem>
 #include <iostream>
 
-#ifdef __unix__
+
+#if defined(__unix__) || defined(__APPLE__)
 #  include <dlfcn.h>
 #  include <unistd.h>
 #endif
@@ -27,42 +28,42 @@ namespace plugin::detail
 
 inline void *libraryOpen(const char *filename)
 {
-#ifdef _WIN32
+#if defined(_WIN32)
     return ((void*)LoadLibrary(filename));
-#elif __unix__
+#elif defined(__unix__) || defined(__APPLE__)
     return dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
 #else
-    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.")
+    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.");
 #endif
 }
 
 inline void *librarySymbol(void *handle, const char *symbol)
 {
-#ifdef _WIN32
+#if defined(_WIN32)
     return ((void*)GetProcAddress((HINSTANCE)handle, symbol));
-#elif __unix__
+#elif defined(__unix__) || defined(__APPLE__)
     return dlsym(handle, symbol);
 #else
-    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.")
+    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.");
 #endif
 }
 
 inline int libraryClose(void *handle)
 {
-#ifdef _WIN32
+#if defined(_WIN32)
     return FreeLibrary((HINSTANCE)handle);
-#elif __unix__
+#elif defined(__unix__) || defined(__APPLE__)
     return dlclose(handle);
 #else
-    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.")
+    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.");
 #endif
 }
 
 inline std::string GetApplicationPath()
 {
-#ifdef _WIN32
+#if defined(_WIN32)
     static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.")
-#elif __unix__
+#elif defined(__unix__) || defined(__APPLE__)
     const size_t bufSize = 512;
     char nameBuf[bufSize] = {0};
     const auto retVal = readlink("/proc/self/exe", nameBuf, bufSize);
@@ -73,7 +74,7 @@ inline std::string GetApplicationPath()
 
     return std::filesystem::path{ nameBuf }.remove_filename();
 #else
-    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.")
+    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.");
 #endif
 }
 
