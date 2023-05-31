@@ -7,6 +7,13 @@
 namespace plugin {
     namespace detail {
 
+        struct ConfigData
+        {
+            std::vector<std::string> pluginList;
+            std::vector<std::string> skippedPlugins;
+            std::vector<std::string> includeFiles;
+        };
+
         //==================================================
         /// Parses a configuration, returning a list of loaded plugins
         /// Only for PluginManager + tests, not to be used by other client code
@@ -15,7 +22,7 @@ namespace plugin {
         ///
         /// \return PluginConfiguration struct containing loaded configuration
         ///
-        std::vector<std::string> ParseConfiguration(std::string filename);
+        ConfigData ParseConfiguration(std::string filename);
     }
 }
 

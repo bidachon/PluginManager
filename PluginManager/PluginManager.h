@@ -20,18 +20,18 @@ namespace plugin {
 
     namespace Container
     {
-        /// Constructs the plugin manager from the specified configuration file
+        /// Constructs the plugin manager from a list of configuration files
         ///
-        /// \param filename The path and filename of the file containing the
-        ///                 plugin configuration represented by this plugin
-        ///                 manager.
+        /// \param filenames Vector of fully qualified filenames of files
+        ///                  containing the plugin configuration represented by
+        ///                  this plugin manager.
         ///
         /// \throw PluginError if unable to parse config or load plugins
         ///
         /// \note if a previous configuration file has been loaded, the plugin
         ///       manager object is destroyed and a new instance is created.
         ///
-        void LoadPluginConfigurationFile(std::string filename);
+        void LoadPluginConfigurationFiles(std::vector<std::string> filenames);
 
         /// Constructs the plugin manager with no plugins loaded.
         ///
@@ -89,11 +89,11 @@ namespace plugin {
     public:
         /// Constructor
         ///
-        /// \param filename The name of the plugin configuration file to load
+        /// \param filenames List of plugin configuration files to load
         ///
         /// \throw PluginError if unable to parse config or load plugins
         ///
-        PluginManager(std::string filename);
+        PluginManager(std::vector<std::string> filenames);
 
         /// Constructor
         ///
@@ -234,7 +234,7 @@ namespace plugin {
 
         /// Loads the configuration from file
         ///
-        /// \param filename the input file describing the plugins to load
+        /// \param filenames the input files describing the plugins to load
         ///
         /// \throw PluginError if unable to parse config or load plugins
         ///
@@ -243,7 +243,7 @@ namespace plugin {
         ///        constraints for some plugins.  For now, if multiple
         ///        plugin configurations are desired it will be
         ///        necessary to have multiple PluginManager instances.
-        void Load(std::string filename);
+        void Load(std::vector<std::string> filenames);
 
         /// Internal method to resolve path
         /// \param filename Input file name

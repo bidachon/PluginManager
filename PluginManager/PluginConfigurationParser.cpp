@@ -10,7 +10,7 @@ namespace
 {
     /// Checks for configuration lines that should be ignored (blank, or comments starting with #)
     ///
-    /// \return bool indicating whether the line should be ignored 
+    /// \return bool indicating whether the line should be ignored
     ///
     bool IsIgnoredLine(std::string const& configLine)
     {
@@ -18,32 +18,43 @@ namespace
         return std::regex_search(configLine, ignoredLineRegex);
     }
 
-    /// Check whether the line is a `plugin:` line, if so it returns the name of the plugin
-    std::string ExtractPluginName(std::string const& filename, std::string const& configLine)
+    std::string ExtractRegex(std::string const& line_prefix, std::string const& configLine)
     {
-        // Plugins are specified with the leader, "plugin:", and can have
-        // trailing comments -- leading and trailing whitespace should be
-        // ignored
-        //
-        // RKTODO:  Fix regex to not treat `plugin: abc def` as "abc", but
+        // RKTODO:  Fix regexex to not treat `plugin: abc def` as "abc", but
         //          instead as an error -- for some reason replacing the
         //          trailing .* with [/s#]* isn't working as I'd expect it to.
         //          Also consider rewriting the regex to requirie the plugin
         //          name to be in quotes to allow spaces in filenames (yuck!)
         //          as well as the # character.
         //
-        std::regex const pluginLineRegex{ R"(^(\s*plugin:\s*)([^\s#]+).*)" };
+
+        std::regex const lineRegex{ R"(^(\s*)" + line_prefix + R"(:\s*)([^\s#]+).*)" };
 
         std::smatch match;
 
         // note:  per the docs, the size = number of sub-expressions + 1
-        if(std::regex_match(configLine, match, pluginLineRegex)
+        if(std::regex_match(configLine, match, lineRegex)
                 && match.size() == 3)
         {
             return match[2];
         }
 
-        throw plugin::exceptions::ConfigurationError{ filename, configLine };
+        return {};
+    }
+
+    std::string ExtractPluginName(std::string const& configLine)
+    {
+        return ExtractRegex("load_plugin", configLine);
+    }
+
+    std::string ExtractIncludeFile(std::string const& configLine)
+    {
+        return ExtractRegex("include_file", configLine);
+    }
+
+    std::string ExtractSkippedPlugin(std::string const& configLine)
+    {
+        return ExtractRegex("skip_plugin", configLine);
     }
 }
 
@@ -52,15 +63,16 @@ namespace plugin {
     namespace detail {
 
         //----------------------------------------------------------------------
-        std::vector<std::string> ParseConfiguration(std::string filename)
+        ConfigData ParseConfiguration(std::string filename)
         {
             std::ifstream ifs{ filename.c_str(), std::ifstream::in };
 
-            if (!ifs.is_open()) {
+            if (!ifs.is_open())
+            {
                 throw exceptions::PluginManagerException{ "Couldn't open file for reading:  " + filename };
             }
 
-            std::vector<std::string> pluginList;
+            ConfigData data;
 
             while(ifs)
             {
@@ -72,9 +84,17 @@ namespace plugin {
                     // Ignoring comments and blank lines
                     continue;
                 }
-                else if(auto pluginName = ExtractPluginName(filename, configLine); !pluginName.empty())
+                else if(auto loadedPlugin = ExtractPluginName(configLine); !loadedPlugin.empty())
                 {
-                    pluginList.emplace_back(std::move(pluginName));
+                    data.pluginList.emplace_back(std::move(loadedPlugin));
+                }
+                else if(auto skippedPlugin = ExtractSkippedPlugin(configLine); !skippedPlugin.empty())
+                {
+                    data.skippedPlugins.emplace_back(std::move(skippedPlugin));
+                }
+                else if(auto includeFile = ExtractIncludeFile(configLine); !includeFile.empty())
+                {
+                    data.includeFiles.emplace_back(std::move(includeFile));
                 }
                 else
                 {
@@ -82,7 +102,7 @@ namespace plugin {
                 }
             }
 
-            return pluginList;
+            return data;
         }
     }
 }

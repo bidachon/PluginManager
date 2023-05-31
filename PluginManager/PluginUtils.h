@@ -78,6 +78,15 @@ inline std::string GetApplicationPath()
 #endif
 }
 
+template<typename OUTVECT, typename APPENDEDVECT>
+inline void AppendVector(OUTVECT& outputVector, APPENDEDVECT const& inputVector)
+{
+    if(!inputVector.empty())
+    {
+        outputVector.insert(end(outputVector), cbegin(inputVector), cend(inputVector));
+    }
+}
+
 } // end namespaces
 
 #endif

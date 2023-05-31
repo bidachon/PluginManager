@@ -7,10 +7,12 @@
 
 #include "PluginUtils.h"
 
+#include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <numeric>
 #include <stdexcept>
 #include <utility>
 
@@ -52,7 +54,7 @@ namespace plugin
         // This function is here to put the pointer in a function rather
         // than at namespace scope to avoid static order-of-init issues.  It'll
         // get initialized (to null) in a thread-safe way the first time this
-        // method is called, then the LoadPluginConfigurationFile function will
+        // method is called, then the LoadPluginConfigurationFiles function will
         // set its value.
         std::unique_ptr<PluginManager>& instance()
         {
@@ -60,14 +62,14 @@ namespace plugin
             return pluginManager;
         }
 
-        void LoadPluginConfigurationFile(std::string filename)
+        void LoadPluginConfigurationFiles(std::vector<std::string> filenames)
         {
             // Force the old PIM to be shut down before creating a new one,
             // unloading existing plugins that aren't kept alive by shared pointers
             // elsewhere (empty reset call forces deletion of old PIM before
             // construction of new one)
             UnloadPluginManager();
-            instance().reset(new plugin::PluginManager{filename});
+            instance().reset(new plugin::PluginManager{filenames});
         }
 
         void LoadWithoutPlugins()
@@ -89,7 +91,7 @@ namespace plugin
         {
             if(!instance()) {
                 throw std::logic_error("There is no plugin manager, "
-                        "did you call LoadPluginConfigurationFile first?");
+                        "did you call LoadPluginConfigurationFiles first?");
             }
 
             return *instance();
@@ -103,9 +105,9 @@ namespace plugin
 
     //======================================================================
 
-    PluginManager::PluginManager(std::string filename)
+    PluginManager::PluginManager(std::vector<std::string> filenames)
     {
-        Load(filename);
+        Load(filenames);
     }
 
     PluginManager::~PluginManager()
@@ -132,18 +134,59 @@ namespace plugin
         m_failHardOnShutdown = true;
     }
 
-    void PluginManager::Load(std::string filename)
+    void PluginManager::Load(std::vector<std::string> filesToParse)
     {
-        // Resolve path according to documented heuristic
-        filename = ResolveConfigPath(filename);
+        LOG_TODO_INFO("PluginManager: using configuration files: " + [&filesToParse]()->std::string{
+                       std::string msgStr;
+                       for(auto const& file : filesToParse) { msgStr += (file + ", "); }
+                       return msgStr;
+                    }());
 
-        LOG_TODO_INFO("PluginManager: using configuration file: " << filename);
+        std::vector<std::string> alreadyParsedFiles;
 
-        auto const pluginList = detail::ParseConfiguration(filename);
+        std::vector<std::string> plugins;
+        std::vector<std::string> skippedPlugins;
+
+        do
+        {
+            auto nextFile = filesToParse.back();
+            filesToParse.pop_back();
+
+            if(cend(alreadyParsedFiles) != std::find(cbegin(alreadyParsedFiles), cend(alreadyParsedFiles), nextFile))
+            {
+                LOG_TODO_INFO("Found duplicate plugin config file, skipping:  " << nextFile);
+                continue;
+            }
+
+            alreadyParsedFiles.push_back(nextFile);
+
+            // Resolve path according to documented heuristic
+            nextFile = ResolveConfigPath(nextFile);
+
+            LOG_TODO_INFO("Loading plugin configuration file:  " << nextFile);
+
+            auto const configuration = detail::ParseConfiguration(nextFile);
+
+            detail::AppendVector(filesToParse,   configuration.includeFiles);
+            detail::AppendVector(plugins,        configuration.pluginList);
+            detail::AppendVector(skippedPlugins, configuration.skippedPlugins);
+        }
+        while(!filesToParse.empty());
+
 
         std::vector<std::shared_ptr<PluginPtr>> pluginLibs;
 
-        for (auto pluginName : pluginList) {
+        for (auto const& pluginName : plugins) {
+
+            if(cend(skippedPlugins) != std::find(cbegin(skippedPlugins), cend(skippedPlugins), pluginName)) {
+                LOG_TODO_INFO("Plugin has been skipped, not loading plugin:  " << pluginName);
+                continue;
+            }
+
+            // NOTE:  There is no check for duplicate plugin files as that's
+            //        allowed -- if you mention a plugin more than once when it
+            //        should only be loaded once that's a configuration error, not
+            //        something that the PluginManager should prevent.
 
             // Resolve path according to documented heuristic
             std::string plName = ResolvePluginPath(pluginName);
@@ -189,11 +232,11 @@ namespace plugin
 
         }
 
-        for (auto const pl : pluginLibs) {
+        for (auto const& pl : pluginLibs) {
             pl->m_libPtr->Initialize();
         }
 
-        for (auto const pl : pluginLibs) {
+        for (auto const& pl : pluginLibs) {
 
             for (auto const dep : pl->m_libPtr->GetDependencies()) {
 
@@ -210,13 +253,13 @@ namespace plugin
                         "extensions of type " + id.GetName() };
                 }
 
-                for (auto pi : extensionVect) {
+                for (auto const& pi : extensionVect) {
                     pl->m_libPtr->ConnectExtension(pi);
                 }
             }
         }
 
-        for (auto const pl : pluginLibs) {
+        for (auto const& pl : pluginLibs) {
             pl->m_libPtr->PostDependencyInit();
         }
     }
