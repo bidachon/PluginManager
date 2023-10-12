@@ -1,0 +1,3 @@
+load_plugin: libDummyGeneratorPlugin.so
+load_plugin: libUniverseAnswerGeneratorPlugin.so
+load_plugin: libDummy2GeneratorPlugin.so

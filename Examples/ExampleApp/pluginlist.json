@@ -1,9 +1,0 @@
-{
-   "configuration": {
-      "description": "Demo application",
-      "author":"Nicolas Robert"
-   },
-   "plugins":["../../plugins/libUniverseAnswerGeneratorPlugin",
-              "../../plugins/libGeneratorManagerPlugin",
-              "../../plugins/libDummyGeneratorPlugin"]
-}

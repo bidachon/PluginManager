@@ -1,0 +1,6 @@
+include(CreatePlugin)
+add_subdirectory(Dummy2GeneratorPlugin)
+add_subdirectory(DummyGeneratorPlugin)
+add_subdirectory(GeneratorManagerPlugin)
+add_subdirectory(StatefulTestPlugin)
+add_subdirectory(UniverseAnswerGeneratorPlugin)

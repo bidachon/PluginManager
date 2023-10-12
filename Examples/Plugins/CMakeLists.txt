@@ -1,4 +1,0 @@
-add_subdirectory(GeneratorManagerPlugin)
-add_subdirectory(UniverseAnswerGeneratorPlugin)
-add_subdirectory(DummyGeneratorPlugin)
-add_subdirectory(Dummy2GeneratorPlugin)

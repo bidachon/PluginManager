@@ -34,3 +34,6 @@ Makefile*
 #Clion
 
 /.idea/
+
+#etags
+tags

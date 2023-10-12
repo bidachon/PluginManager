@@ -1,0 +1,2 @@
+load_plugin: libUniverseAnswerGeneratorPlugin.so
+load_plugin: libGeneratorManagerPlugin.so
