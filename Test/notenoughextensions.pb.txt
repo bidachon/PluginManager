@@ -1,1 +1,1 @@
-plugins: "libDummyGeneratorPlugin.so"
+load_plugin: libDummyGeneratorPlugin.so

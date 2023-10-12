@@ -1,6 +1,5 @@
 #include "PluginManager.h"
 #include "PluginConfigurationParser.h"
-#include "PluginManagerExceptions.h"
 
 #include "IPluginLib.h"
 #include "Dependency.h"
@@ -104,6 +103,10 @@ namespace plugin
     }
 
     //======================================================================
+    PluginManager::PluginManager(std::string filename)
+    {
+        Load({filename});
+    }
 
     PluginManager::PluginManager(std::vector<std::string> filenames)
     {
@@ -189,13 +192,13 @@ namespace plugin
             //        something that the PluginManager should prevent.
 
             // Resolve path according to documented heuristic
-            std::string plName = ResolvePluginPath(pluginName);
+            auto const plName = ResolvePluginPath(pluginName);
 
             LOG_TODO_INFO( "Loading plugin " << plName );
 
             auto pl = detail::libraryOpen(plName.c_str());
             if (!pl) {
-                throw exceptions::PluginError{ "Error loading " + plName +": " + dlerror() };
+                throw exceptions::PluginError{ "Error loading " + plName.filename().native() + ": " + dlerror() };
             }
 
             void *raw_loader = detail::librarySymbol(pl, "plugin_creator");
@@ -209,7 +212,7 @@ namespace plugin
             auto ngplugin = creator();
             if (!ngplugin) {
                 throw exceptions::PluginError{ "This plugin does not contain a "
-                        "valid IPluginLib implementation:  " + plName };
+                        "valid IPluginLib implementation:  " + plName.native() };
             }
 
             pluginLibs.push_back(std::make_shared<PluginPtr>(ngplugin, pl));
@@ -264,22 +267,22 @@ namespace plugin
         }
     }
 
-    std::string PluginManager::ResolveConfigPath(std::string filename)
+    std::filesystem::path PluginManager::ResolveConfigPath(std::string filename)
     {
         return ResolvePathInternal(filename, "PLUGIN_CONFIG_PATH", "");
     }
 
-    std::string PluginManager::ResolvePluginPath(std::string filename)
+    std::filesystem::path PluginManager::ResolvePluginPath(std::string filename)
     {
         return ResolvePathInternal(filename, "PLUGIN_PATH", "plugins/");
     }
 
-    std::string PluginManager::ResolvePathInternal(std::string filename,
+    std::filesystem::path PluginManager::ResolvePathInternal(std::string filename,
                                                const char* envVarOverride,
                                                std::string defaultPrefix)
     {
         if(filename.empty()) {
-            throw std::logic_error("Received invalid filename in ResolvePathInternal");
+            throw std::logic_error{ "Received blank filename in ResolvePathInternal" };
         }
 
         std::ifstream file(filename.c_str());
@@ -293,12 +296,12 @@ namespace plugin
         // Check environment variable to override the default location
         const char *pluginDir = std::getenv(envVarOverride);
         if (pluginDir) {
-            return std::string(pluginDir) + "/" + filename;
+            return std::filesystem::path{pluginDir} / filename;
         }
 
         // Fallback onto default, which is path to application binary
-        std::string appBinPath = detail::GetApplicationPath();
-        return appBinPath + "/" + defaultPrefix + filename;
+        auto const appBinPath = detail::GetApplicationPath();
+        return appBinPath / defaultPrefix / filename;
     }
 }
 

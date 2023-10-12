@@ -4,8 +4,10 @@
 #include "IPluginInterface.h"
 #include "IPluginLib.h"
 #include "InterfaceId.h"
+#include "PluginManagerExceptions.h"
 
 #include <map>
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -87,7 +89,15 @@ namespace plugin {
     class PluginManager final
     {
     public:
-        /// Constructor
+        /// Constructor for loading plugins from a single configuration file
+        ///
+        /// \param filename Plugin configuration file to load
+        ///
+        /// \throw PluginError if unable to parse config or load plugins
+        ///
+        PluginManager(std::string filename);
+
+        /// Constructor for loading plugins from multiple configuration files
         ///
         /// \param filenames List of plugin configuration files to load
         ///
@@ -182,7 +192,7 @@ namespace plugin {
                 auto const asType  = std::dynamic_pointer_cast<FILTERED_TYPE>(e);
 
                 if(!asIface) {
-                    throw PluginError("A plugin with id '" + idString +
+                    throw exceptions::PluginError("A plugin with id '" + idString +
                             "' was not of the expected type, dynamic cast failed "
                             "(do multiple plugin interfaces use the same ID string?)");
                 }
@@ -196,7 +206,7 @@ namespace plugin {
             }
 
             if(!predicate(interfaceInstances.size())) {
-                throw PluginError(
+                throw exceptions::PluginError(
                         "Did not find the expected number of plugins of type " +
                         idString + "\nNumber of instances: " +
                         std::to_string(interfaceInstances.size()));
@@ -215,7 +225,7 @@ namespace plugin {
         /// \see GTestPluginManager.cpp
         ///
         /// Made public for testing
-        static std::string ResolveConfigPath(std::string filename);
+        static std::filesystem::path ResolveConfigPath(std::string filename);
 
         /// Given a plugin filename with no path, figure out the full path.
         /// The resolution is in this order, by priority descending (i.e. stuff
@@ -227,7 +237,7 @@ namespace plugin {
         /// \see GTestPluginManager.cpp
         ///
         /// Made public for testing
-        static std::string ResolvePluginPath(std::string filename);
+        static std::filesystem::path ResolvePluginPath(std::string filename);
 
 
     private:
@@ -250,7 +260,7 @@ namespace plugin {
         /// \param envVarOverride Environment variable that overrides the prefix
         /// \param defaultPrefix Default path prefix to use if filename is
         ///        relative and env var is not set.
-        static std::string ResolvePathInternal(std::string filename,
+        static std::filesystem::path ResolvePathInternal(std::string filename,
                                               const char* envVarOverride,
                                               std::string defaultPrefix);
 

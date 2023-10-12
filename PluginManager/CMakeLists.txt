@@ -16,13 +16,6 @@ set(${TARGET}_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/PluginManager.cpp
   )
 
-set(${TARGET}_INC
-  ${CMAKE_CURRENT_BINARY_DIR}/Config
-  )
-
-set(${TARGET}_LIB
-  )
-
 # RKTODO:  Provide ability to create static vs shared library
 add_library(${TARGET} STATIC
     ${${TARGET}_SRC}
@@ -32,5 +25,8 @@ add_library(${TARGET} STATIC
 set_target_properties(${TARGET} PROPERTIES VERSION ${PluginManager_VERSION_MAJOR}.${PluginManager_VERSION_MINOR})
 set_target_properties(${TARGET} PROPERTIES SOVERSION ${PluginManager_VERSION_MAJOR})
 
-set(${TARGET}_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "" FORCE)
+target_include_directories(${TARGET}
+    PUBLIC
+    "${CMAKE_CURRENT_LIST_DIR}"
+  )
 

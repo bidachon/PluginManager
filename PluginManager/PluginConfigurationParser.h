@@ -1,8 +1,9 @@
 #ifndef PLUGINCONFIGURATIONPARSER_H_ABC92D9F_43FB_4BC3_AC99_266A8263893F
 #define PLUGINCONFIGURATIONPARSER_H_ABC92D9F_43FB_4BC3_AC99_266A8263893F
 
-#include <vector>
+#include <filesystem>
 #include <string>
+#include <vector>
 
 namespace plugin {
     namespace detail {
@@ -18,11 +19,11 @@ namespace plugin {
         /// Parses a configuration, returning a list of loaded plugins
         /// Only for PluginManager + tests, not to be used by other client code
         ///
-        /// \param filename The configuration file to parse
+        /// \param file The configuration file to parse
         ///
         /// \return PluginConfiguration struct containing loaded configuration
         ///
-        ConfigData ParseConfiguration(std::string filename);
+        ConfigData ParseConfiguration(std::filesystem::path file);
     }
 }
 

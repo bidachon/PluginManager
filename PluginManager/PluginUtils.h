@@ -59,11 +59,9 @@ inline int libraryClose(void *handle)
 #endif
 }
 
-inline std::string GetApplicationPath()
+inline std::filesystem::path GetApplicationPath()
 {
-#if defined(_WIN32)
-    static_assert(false, "This platform is not yet handled, please update PluginUtils.h and submit a change request.")
-#elif defined(__unix__) || defined(__APPLE__)
+#if defined(__unix__) || defined(__APPLE__)
     const size_t bufSize = 512;
     char nameBuf[bufSize] = {0};
     const auto retVal = readlink("/proc/self/exe", nameBuf, bufSize);

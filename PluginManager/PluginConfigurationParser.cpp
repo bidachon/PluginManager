@@ -63,13 +63,13 @@ namespace plugin {
     namespace detail {
 
         //----------------------------------------------------------------------
-        ConfigData ParseConfiguration(std::string filename)
+        ConfigData ParseConfiguration(std::filesystem::path file)
         {
-            std::ifstream ifs{ filename.c_str(), std::ifstream::in };
+            std::ifstream ifs{ file.c_str(), std::ifstream::in };
 
             if (!ifs.is_open())
             {
-                throw exceptions::PluginManagerException{ "Couldn't open file for reading:  " + filename };
+                throw exceptions::PluginManagerException{ "Couldn't open file for reading:  " + file.native() };
             }
 
             ConfigData data;
@@ -98,7 +98,7 @@ namespace plugin {
                 }
                 else
                 {
-                    throw exceptions::ConfigurationError{ filename, configLine };
+                    throw exceptions::ConfigurationError{ file.native(), configLine };
                 }
             }
 

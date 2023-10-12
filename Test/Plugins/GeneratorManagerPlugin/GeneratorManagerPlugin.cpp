@@ -1,6 +1,8 @@
 #include "GeneratorManagerPlugin.h"
-#include "Common/CommonMacros.h"
 
+#include "Interfaces/INumberGenerator.h"
+
+#include <memory>
 
 GeneratorManagerPlugin::GeneratorManagerPlugin():
     m_generatorManager(AddExtension<GeneratorManagerImpl>())
@@ -14,12 +16,12 @@ void GeneratorManagerPlugin::ConnectExtension(plugin::ExtensionPtr iface)
     using namespace plugin::interfaces;
     if(iface->IsAn<INumberGenerator>())
     {
-        auto const nbGen = polymorphic_downcast<plugin::interfaces::INumberGenerator>(iface);
+        auto const nbGen = std::static_pointer_cast<plugin::interfaces::INumberGenerator>(iface);
         m_generatorManager->addNumberGenerator(nbGen);
         return;
     }
 
-    assert(!"Did you add a new dependency and not handle it?");
+    throw std::logic_error{"Did you add a new dependency and not handle it?"};
 }
 
 CREATE_PLUGIN_INSTANCE(GeneratorManagerPlugin);

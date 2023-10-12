@@ -19,3 +19,4 @@ set(${TARGET}_LIB
   )
 
 CreatePluginMacro(${TARGET} TEST)
+

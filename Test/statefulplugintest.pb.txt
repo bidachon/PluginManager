@@ -1,1 +1,1 @@
-plugins: "libStatefulTestPlugin.so"
+load_plugin: libStatefulTestPlugin.so

@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.22)
 set (PluginManager_VERSION_MAJOR 2)
 set (PluginManager_VERSION_MINOR 0)
 
-project (PluginManager 
-    VERSION ${PluginManager_VERSION_MAJOR}.${PluginManager_VERSION_MINOR} 
+project (PluginManager
+    VERSION ${PluginManager_VERSION_MAJOR}.${PluginManager_VERSION_MINOR}
     DESCRIPTION "A C++ runtime dependency injection framework"
 )
 
@@ -25,9 +25,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
 add_subdirectory(PluginManager)
-add_subdirectory(Test)
 
-enable_testing()
+option(PLUGIN_MANAGER_BUILD_TESTS "Build unit tests" ON)
+if(PLUGIN_MANAGER_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(Test)
+endif()
+
 
 #### RKTODO:  Need to put this stuff back, for now just get it compiling standalone again
 # add_subdirectory(Examples)
@@ -38,8 +42,8 @@ enable_testing()
 ####   set_tests_properties (${name}
 ####     PROPERTIES PASS_REGULAR_EXPRESSION ${result})
 #### endmacro (do_simpletest)
-#### 
-#### 
+####
+####
 #### do_simpletest(FileDoesNotExist ${PluginManager_BINARY_DIR}/PluginManager/Tests/XXX.json "File does not exist")
 #### do_simpletest(NoConfigurationTag ${PluginManager_BINARY_DIR}/PluginManager/Tests/noconfiguration.json "Missing json object attribute /configuration/")
 #### do_simpletest(NoDescriptionTag ${PluginManager_BINARY_DIR}/PluginManager/Tests/nodescription.json "Missing or empty json string attribute /description/")

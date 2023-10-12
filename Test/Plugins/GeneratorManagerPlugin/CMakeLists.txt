@@ -16,7 +16,7 @@ set(${TARGET}_INC
 
 set(${TARGET}_LIB
   PluginManager
-  Qt5::Widgets
   )
 
 CreatePluginMacro(${TARGET} TEST)
+
